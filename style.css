@@ -70,6 +70,10 @@ html {
 	vertical-align: bottom;
 }
 
+.grades-table th {
+	font-weight: bold;
+}
+
 .grades-table {
   border-collapse: collapse;
   width: 100%;
@@ -108,4 +112,13 @@ html {
 	text-transform: uppercase;
 	background: #fefce3;
 	font-size: 12px;
+}
+
+.grades-table .grade-table-input:focus,
+.grades-table .grade-table-input:active {
+	border-radius: 0px;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	outline: none;
+	background: #fff;
 }
