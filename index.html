@@ -3,76 +3,99 @@
   <head>
     <title>Hello World!</title>
   	<link rel="stylesheet" type="text/css" href="style.css">
+  	<link rel="stylesheet" type="text/css" href="vendor/tabby/tabby.min.css">
   	<script src="./libs/jquery.js"></script>
   	<script src="./libs/knockout-3.2.0.js"></script>
   </head>
   <body>
-  <div class="grades-table-container csstransforms">
-  		<a href="#" data-bind="click: breakpoint">breakpoint</a>
-	  <table class="grades-table">
-	    <thead>
-	    	<tr>
-	    		<th colspan="3" class="no-border"></th>
-	    		<!-- ko foreach: { data: assignements, as: 'assignment'}-->
-	    			<th data-bind="
-	    				attr: {colspan: assignment.parts().length}, 
-	    				text: assignment.multiple ? assignment.title : '',
-	    				css: { 'no-border' : !assignment.multiple }
-	    				">
-	    			</th>
-	    		<!-- /ko -->
-	    	</tr>
-	    <tr>
-	    	<th class="no-border" colspan="3"></th>
-	    	<!-- ko foreach: {data: assignements, as: 'a'} -->
-	    		<!-- ko foreach: {data: a.parts(), as: 'p'} -->
-	    			<th class="rotate">
-	    				<div><span data-bind="text: a.multiple? p.title : a.title "></span></div>
-	    			</th>
-	    		<!-- /ko -->
-	        <!-- /ko -->
-	    </tr>
-	      <tr >
-	        <!-- First column header is not rotated -->
-	        <th class="no-rotation">ID</th>
-	        <th class="no-rotation">Apellido</th>
-	        <th class="no-rotation">Nombre</th>
-	        <!-- ko foreach: {data: assignements, as: 'a'} -->
-	    		<!-- ko foreach: {data: a.parts(), as: 'p'} -->
-	    			<th class="no-rotation" data-bind="text: p.due_date"></th>
-	    		<!-- /ko -->
-	        <!-- /ko -->
-	        <th class="no-rotation">GRADE</th>
-	        <th class="no-rotation">comentarios</th>
-	        <!-- Following headers are rotated -->
-	        
-	      </tr>
-	      <tr></tr>
-	      <tr></tr>
-	    </thead>
-	    <tbody data-bind="foreach: students">
-	     	<tr>
-	     		<td><input type="text"  class="grade-table-input auto-width" data-bind="value:id" /></td>
-	     		<td><input type="text"  class="grade-table-input auto-width" data-bind="value:lastname"  /></td>
-	     		<td><input type="text"  class="grade-table-input auto-width" data-bind="value:name" /></td>
-	     		<!-- ko foreach : {data: grades, as:'grade'} -->
-	     			<td><input type="text"  class="grade-table-input auto-width" data-bind="value: grade" /></td>
-	     		<!-- /ko -->
-	     		<td>
-	     			<input type="text"  class="grade-table-input auto-width" data-bind="value: final_grade" />
-	     		</td>
-	     		<td>
-	     			<textarea class="grade-table-input" data-bind="value:comments">
-	     			</textarea>
-	     		</td>
-	     	</tr>
-	    </tbody>
-	  </table>
+  	<div class="tabs">
+	    <button class="active tabby-tab" data-tab="#tab1">Superheroes</button>
+	    <button class="tabby-tab" data-tab="#tab2">Ice Cream</button>
+	    <button class="tabby-tab" data-tab="#tab3">Seasons</button>
+	</div>
+	<div class="tabs-content grades-table-container csstransforms">
+		<a href="#" data-bind="click: breakpoint">breakpoint</a>
+		<div class="tabs-pane active" id="tab1">
+			<table class="grades-table">
+				<thead>
+					<tr>
+						<th colspan="3" class="no-border"></th>
+						<!-- ko foreach: { data: assignements, as: 'assignment'}-->
+							<th data-bind="
+								attr: {colspan: assignment.parts().length}, 
+								css: { 'no-border' : !assignment.multiple, 'multiple-assignment-header' : assignment.multiple }
+								">
+								<span data-bind="text: assignment.multiple ? assignment.title : ''"></span>
+								<!-- ko if: assignment.multiple -->
+									<a href="#" class="multiple-button active">M</a>
+								<!-- /ko -->
+							</th>
+						<!-- /ko -->
+					</tr>
+				    <tr>
+				    	<th class="no-border" colspan="3"></th>
+				    	<!-- ko foreach: {data: assignements, as: 'a'} -->
+				    		<!-- ko foreach: {data: a.parts(), as: 'p'} -->
+				    			<th class="rotate assignment-part-header">
+				    				<!-- ko if: !a.multiple -->
+				    					<a href="#" class="multiple-button">M</a>
+				    				<!-- /ko -->
+				    				<div><span data-bind="text: a.multiple? p.title : a.title "></span></div>
+				    			</th>
+				    		<!-- /ko -->
+				        <!-- /ko -->
+				    </tr>
+					<tr >
+						<!-- First column header is not rotated -->
+						<th class="no-rotation">ID</th>
+						<th class="no-rotation">Apellido</th>
+						<th class="no-rotation">Nombre</th>
+						<!-- ko foreach: {data: assignements, as: 'a'} -->
+							<!-- ko foreach: {data: a.parts(), as: 'p'} -->
+								<th class="no-rotation" data-bind="text: p.due_date"></th>
+							<!-- /ko -->
+						<!-- /ko -->
+						<th class="no-rotation">GRADE</th>
+						<th class="no-rotation">comentarios</th>
+					<!-- Following headers are rotated -->
+					</tr>
+				  <tr></tr>
+				  <tr></tr>
+				</thead>
+				<tbody data-bind="foreach: students">
+				 	<tr>
+				 		<td><input type="text"  class="grade-table-input auto-width" data-bind="value:id" /></td>
+				 		<td><input type="text"  class="grade-table-input auto-width" data-bind="value:lastname"  /></td>
+				 		<td><input type="text"  class="grade-table-input auto-width" data-bind="value:name" /></td>
+				 		<!-- ko foreach : {data: grades, as:'grade'} -->
+				 			<td><input type="text"  class="grade-table-input auto-width" data-bind="value: grade" /></td>
+				 		<!-- /ko -->
+				 		<td>
+				 			<input type="text"  class="grade-table-input auto-width" data-bind="value: final_grade" />
+				 		</td>
+				 		<td>
+				 			<textarea class="grade-table-input" data-bind="value:comments">
+				 			</textarea>
+				 		</td>
+				 	</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="tabs-pane" id="tab2">
+			hohoho
+		</div>
+		<div class="tabs-pane" id="tab3">
+			hihihi
+		</div>
 	</div>
  	</body>
  	<script type="text/javascript">
 		//window.$ = window.jQuery = require('./libs/jquery.js');
 	</script>
-	<script src="./scripts/app.js" type="text/javascript"></script>
+	<script src="./vendor/tabby/js/classList.min.js" type="text/javascript"></script>
+	<script src="./vendor/tabby/js/bind-polyfill.min.js" type="text/javascript"></script>
+	<script src="./vendor/tabby/js/tabby.min.js" type="text/javascript"></script>
+
 	<script src="./scripts/coffee/GradebookViewModel.js" type="text/javascript"></script>
+	<script src="./scripts/app.js" type="text/javascript"></script>
 </html>

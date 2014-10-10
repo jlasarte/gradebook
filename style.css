@@ -57,6 +57,7 @@ html {
 
 .grades-table-container {
 	margin: 20px auto;
+	width: 95%;
 }
 
 .grades-table {
@@ -121,4 +122,50 @@ html {
 	-webkit-box-shadow: none;
 	outline: none;
 	background: #fff;
+}
+
+.grades-table .multiple-assignment-header,
+.grades-table .assignment-part-header {
+	position: relative;
+}
+
+.grades-table .multiple-button {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+	background: #F7F7F7;
+	padding: 2px;
+	border-radius: 2px;
+	color: #868686;
+	text-decoration: none;
+	font-weight: normal;
+	border: 1px solid black;
+}
+
+.grades-table .multiple-button.active {
+	background: #868686;
+	color: #F7F7F7;
+}
+
+.tabs {
+	background: #363636;
+	padding-left: 10px;
+	padding-top: 10px;
+}
+
+
+.tabs .tabby-tab {
+	background: #4E4E4E;
+	border-top: 1px solid black;
+	border-right: 1px solid #000;
+	border-left: 1px solid #000;
+	border-bottom: none;
+	margin: 0;
+	padding: 7px;
+	color: #fff;
+}
+
+.tabs .tabby-tab.active {
+	background: #fefce3;
+	color: #363636;
 }
