@@ -30,12 +30,37 @@ class Grade
 class Assignement 
   
   constructor: (data) ->
-    @title = ko.observable(data.title)
-    @type = ko.observable(data.type)
-    @weight = ko.observable(data.weight)
-    @due_date = ko.observable(data.due_date)
-    @parts = ko.observableArray(data.parts)
-    @multiple = (@parts().length > 1);
+    
+    @title = ko.observable()
+    @type = ko.observable()
+    @weight = ko.observable()
+    @due_date = ko.observable()
+    @parts = ko.observableArray()
+
+    @multiple = ko.computed(->
+      @parts().length > 1
+    ,this);
+
+    @is_selected = ko.computed(->
+      if @multiple
+        false
+      else
+        if @parts().length > 0
+          @parts()[0].is_selected()
+        else
+          false
+    ,this)
+
+  initialize_data: (data)->
+    
+    @title data.title
+    @type data.type
+    @weight data.weight
+    @due_date data.due_date
+    @parts data.parts
+
+    # return object for chaining etc
+    this
 
 class AssignementPart
 
@@ -43,11 +68,15 @@ class AssignementPart
     @due_date = ko.observable(data.due_date)
     @weight = ko.observable(data.weight)
     @title = ko.observable(data.title)
+    @is_selected = ko.observable(false)
+
+  toggle_selection: ->
+    @is_selected(!@is_selected())
 
 
 DemoAssignements = ->
   a = [
-    new Assignement(
+    new Assignement().initialize_data(
       title: "TP1"
       type: "Trabajo Practico"
       weight: "50"
@@ -65,7 +94,7 @@ DemoAssignements = ->
         )
       ]
     )
-    new Assignement(
+    new Assignement().initialize_data(
       title: "TP5"
       type: "Trabajo Practico"
       weight: "10"
@@ -78,7 +107,7 @@ DemoAssignements = ->
         )
       ]
     )
-    new Assignement(
+    new Assignement().initialize_data(
       title: "TP3"
       type: "Trabajo Practico"
       weight: "10"
@@ -91,7 +120,7 @@ DemoAssignements = ->
         )
       ]
     )
-    new Assignement(
+    new Assignement().initialize_data(
       title: "TP3"
       type: "Trabajo Practico"
       weight: "10"
@@ -146,13 +175,17 @@ DemoStundents = (a) ->
     ).initialize_grades(a)
   ]
   s
-GradeBookViewModel = ->
-  self = this
-  self.assignements = ko.observableArray(DemoAssignements())
-  self.students = ko.observableArray(DemoStundents(self.assignements()))
-  self.breakpoint = ->
-    console.log "breaking point"
-    return
 
-  return
+class GradeBookViewModel
+  constructor: ->
+    @assignements = ko.observableArray(DemoAssignements())
+    @students = ko.observableArray(DemoStundents(@assignements()))
+  
+  breakpoint: ->
+    console.log "breaking point"
+
+  convert_selected_assignments_to_group: ->
+    assignment = new Assignement()
+    console.log a for a in @assignements() when a.is_selected()
+
 ko.applyBindings new GradeBookViewModel()

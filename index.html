@@ -9,12 +9,13 @@
   </head>
   <body>
   	<div class="tabs">
-	    <button class="active tabby-tab" data-tab="#tab1">Superheroes</button>
-	    <button class="tabby-tab" data-tab="#tab2">Ice Cream</button>
-	    <button class="tabby-tab" data-tab="#tab3">Seasons</button>
+	    <button class="active tabby-tab" data-tab="#tab1">Gradebook</button>
+	    <button class="tabby-tab" data-tab="#tab2">Attendance</button>
+	    <button class="tabby-tab" data-tab="#tab3">Seating Chart</button>
 	</div>
 	<div class="tabs-content grades-table-container csstransforms">
 		<a href="#" data-bind="click: breakpoint">breakpoint</a>
+		<a href="#" data-bind="click: convert_selected_assignments_to_group">convert selected assignments to group</a>
 		<div class="tabs-pane active" id="tab1">
 			<table class="grades-table">
 				<thead>
@@ -23,9 +24,9 @@
 						<!-- ko foreach: { data: assignements, as: 'assignment'}-->
 							<th data-bind="
 								attr: {colspan: assignment.parts().length}, 
-								css: { 'no-border' : !assignment.multiple, 'multiple-assignment-header' : assignment.multiple }
+								css: { 'no-border' : !assignment.multiple(), 'multiple-assignment-header' : assignment.multiple() }
 								">
-								<span data-bind="text: assignment.multiple ? assignment.title : ''"></span>
+								<span data-bind="text: assignment.multiple() ? assignment.title : ''"></span>
 								<!-- ko if: assignment.multiple -->
 									<a href="#" class="multiple-button active">M</a>
 								<!-- /ko -->
@@ -36,11 +37,11 @@
 				    	<th class="no-border" colspan="3"></th>
 				    	<!-- ko foreach: {data: assignements, as: 'a'} -->
 				    		<!-- ko foreach: {data: a.parts(), as: 'p'} -->
-				    			<th class="rotate assignment-part-header">
+				    			<th class="rotate assignment-part-header" data-bind="click: p.toggle_selection, css: {'selected': p.is_selected}">
 				    				<!-- ko if: !a.multiple -->
 				    					<a href="#" class="multiple-button">M</a>
 				    				<!-- /ko -->
-				    				<div><span data-bind="text: a.multiple? p.title : a.title "></span></div>
+				    				<div><span data-bind="text: a.multiple()? p.title : a.title "></span></div>
 				    			</th>
 				    		<!-- /ko -->
 				        <!-- /ko -->

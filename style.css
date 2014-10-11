@@ -129,6 +129,10 @@ html {
 	position: relative;
 }
 
+.grades-table .assignment-part-header.selected {
+	background: red;
+}
+
 .grades-table .multiple-button {
 	position: absolute;
 	top: 2px;

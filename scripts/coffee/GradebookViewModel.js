@@ -47,13 +47,35 @@
 
   Assignement = (function() {
     function Assignement(data) {
-      this.title = ko.observable(data.title);
-      this.type = ko.observable(data.type);
-      this.weight = ko.observable(data.weight);
-      this.due_date = ko.observable(data.due_date);
-      this.parts = ko.observableArray(data.parts);
-      this.multiple = this.parts().length > 1;
+      this.title = ko.observable();
+      this.type = ko.observable();
+      this.weight = ko.observable();
+      this.due_date = ko.observable();
+      this.parts = ko.observableArray();
+      this.multiple = ko.computed(function() {
+        return this.parts().length > 1;
+      }, this);
+      this.is_selected = ko.computed(function() {
+        if (this.multiple) {
+          return false;
+        } else {
+          if (this.parts().length > 0) {
+            return this.parts()[0].is_selected();
+          } else {
+            return false;
+          }
+        }
+      }, this);
     }
+
+    Assignement.prototype.initialize_data = function(data) {
+      this.title(data.title);
+      this.type(data.type);
+      this.weight(data.weight);
+      this.due_date(data.due_date);
+      this.parts(data.parts);
+      return this;
+    };
 
     return Assignement;
 
@@ -64,7 +86,12 @@
       this.due_date = ko.observable(data.due_date);
       this.weight = ko.observable(data.weight);
       this.title = ko.observable(data.title);
+      this.is_selected = ko.observable(false);
     }
+
+    AssignementPart.prototype.toggle_selection = function() {
+      return this.is_selected(!this.is_selected());
+    };
 
     return AssignementPart;
 
@@ -73,7 +100,7 @@
   DemoAssignements = function() {
     var a;
     a = [
-      new Assignement({
+      new Assignement().initialize_data({
         title: "TP1",
         type: "Trabajo Practico",
         weight: "50",
@@ -89,7 +116,7 @@
             due_date: "20/09"
           })
         ]
-      }), new Assignement({
+      }), new Assignement().initialize_data({
         title: "TP5",
         type: "Trabajo Practico",
         weight: "10",
@@ -101,7 +128,7 @@
             due_date: "12/09"
           })
         ]
-      }), new Assignement({
+      }), new Assignement().initialize_data({
         title: "TP3",
         type: "Trabajo Practico",
         weight: "10",
@@ -113,7 +140,7 @@
             due_date: "12/09"
           })
         ]
-      }), new Assignement({
+      }), new Assignement().initialize_data({
         title: "TP3",
         type: "Trabajo Practico",
         weight: "10",
@@ -168,15 +195,33 @@
     return s;
   };
 
-  GradeBookViewModel = function() {
-    var self;
-    self = this;
-    self.assignements = ko.observableArray(DemoAssignements());
-    self.students = ko.observableArray(DemoStundents(self.assignements()));
-    self.breakpoint = function() {
-      console.log("breaking point");
+  GradeBookViewModel = (function() {
+    function GradeBookViewModel() {
+      this.assignements = ko.observableArray(DemoAssignements());
+      this.students = ko.observableArray(DemoStundents(this.assignements()));
+    }
+
+    GradeBookViewModel.prototype.breakpoint = function() {
+      return console.log("breaking point");
     };
-  };
+
+    GradeBookViewModel.prototype.convert_selected_assignments_to_group = function() {
+      var a, assignment, _i, _len, _ref, _results;
+      assignment = new Assignement();
+      _ref = this.assignements();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        a = _ref[_i];
+        if (a.is_selected()) {
+          _results.push(console.log(a));
+        }
+      }
+      return _results;
+    };
+
+    return GradeBookViewModel;
+
+  })();
 
   ko.applyBindings(new GradeBookViewModel());
 
