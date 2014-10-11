@@ -2,6 +2,104 @@
 (function() {
   var Assignement, AssignementPart, DemoAssignements, DemoStundents, Grade, GradeBookViewModel, Student;
 
+  DemoAssignements = function() {
+    var a;
+    a = [
+      new Assignement().initialize_data({
+        title: "TP1",
+        type: "Trabajo Practico",
+        weight: "50",
+        parts: [
+          new AssignementPart().initialize_data({
+            title: "Preguntas",
+            weight: "50",
+            due_date: "12/09"
+          }), new AssignementPart().initialize_data({
+            title: "Participacion",
+            type: "Part",
+            weight: "50",
+            due_date: "20/09"
+          })
+        ]
+      }), new Assignement().initialize_data({
+        title: "TP5",
+        type: "Trabajo Practico",
+        weight: "10",
+        due_date: "30/6",
+        parts: [
+          new AssignementPart().initialize_data({
+            title: "",
+            weight: "100",
+            due_date: "12/09"
+          })
+        ]
+      }), new Assignement().initialize_data({
+        title: "TP3",
+        type: "Trabajo Practico",
+        weight: "10",
+        due_date: "30/6",
+        parts: [
+          new AssignementPart().initialize_data({
+            title: "",
+            weight: "100",
+            due_date: "12/09"
+          })
+        ]
+      }), new Assignement().initialize_data({
+        title: "TP3",
+        type: "Trabajo Practico",
+        weight: "10",
+        due_date: "30/6",
+        parts: [
+          new AssignementPart().initialize_data({
+            title: "",
+            weight: "100",
+            due_date: "12/09"
+          })
+        ]
+      })
+    ];
+    return a;
+  };
+
+  DemoStundents = function(a) {
+    var s;
+    s = [
+      new Student({
+        id: 12223,
+        name: "Julia",
+        lastname: "Lasarte",
+        comments: "Un comentario"
+      }).initialize_grades(a), new Student({
+        id: 465416,
+        name: "Juan",
+        lastname: "Lasarte",
+        comments: ""
+      }).initialize_grades(a), new Student({
+        id: 45646,
+        name: "Pedro",
+        lastname: "Lasarte",
+        comments: ""
+      }).initialize_grades(a), new Student({
+        id: 13213,
+        name: "Maria",
+        lastname: "Lasarte",
+        comments: ""
+      }).initialize_grades(a), new Student({
+        id: 45646,
+        name: "Elena",
+        lastname: "Lasarte",
+        comments: "Un comentario"
+      }).initialize_grades(a), new Student({
+        id: 79878,
+        name: "Pedro",
+        lastname: "Lasarte",
+        comments: "Un comentario"
+      }).initialize_grades(a)
+    ];
+    return s;
+  };
+
   Student = (function() {
     function Student(data) {
       this.id = ko.observable(data.id);
@@ -56,7 +154,7 @@
         return this.parts().length > 1;
       }, this);
       this.is_selected = ko.computed(function() {
-        if (this.multiple) {
+        if (this.multiple()) {
           return false;
         } else {
           if (this.parts().length > 0) {
@@ -67,6 +165,15 @@
         }
       }, this);
     }
+
+    Assignement.prototype.toAssignmentPart = function() {
+      var part;
+      part = new AssignementPart();
+      part.title(this.title());
+      part.due_date(this.due_date());
+      part.weight(this.weight());
+      return part;
+    };
 
     Assignement.prototype.initialize_data = function(data) {
       this.title(data.title);
@@ -82,12 +189,19 @@
   })();
 
   AssignementPart = (function() {
-    function AssignementPart(data) {
-      this.due_date = ko.observable(data.due_date);
-      this.weight = ko.observable(data.weight);
-      this.title = ko.observable(data.title);
+    function AssignementPart() {
+      this.due_date = ko.observable();
+      this.weight = ko.observable();
+      this.title = ko.observable();
       this.is_selected = ko.observable(false);
     }
+
+    AssignementPart.prototype.initialize_data = function(data) {
+      this.due_date(data.due_date);
+      this.weight(data.weight);
+      this.title(data.title);
+      return this;
+    };
 
     AssignementPart.prototype.toggle_selection = function() {
       return this.is_selected(!this.is_selected());
@@ -96,104 +210,6 @@
     return AssignementPart;
 
   })();
-
-  DemoAssignements = function() {
-    var a;
-    a = [
-      new Assignement().initialize_data({
-        title: "TP1",
-        type: "Trabajo Practico",
-        weight: "50",
-        parts: [
-          new AssignementPart({
-            title: "Preguntas",
-            weight: "50",
-            due_date: "12/09"
-          }), new AssignementPart({
-            title: "Participacion",
-            type: "Part",
-            weight: "50",
-            due_date: "20/09"
-          })
-        ]
-      }), new Assignement().initialize_data({
-        title: "TP5",
-        type: "Trabajo Practico",
-        weight: "10",
-        due_date: "30/6",
-        parts: [
-          new AssignementPart({
-            title: "",
-            weight: "100",
-            due_date: "12/09"
-          })
-        ]
-      }), new Assignement().initialize_data({
-        title: "TP3",
-        type: "Trabajo Practico",
-        weight: "10",
-        due_date: "30/6",
-        parts: [
-          new AssignementPart({
-            title: "",
-            weight: "100",
-            due_date: "12/09"
-          })
-        ]
-      }), new Assignement().initialize_data({
-        title: "TP3",
-        type: "Trabajo Practico",
-        weight: "10",
-        due_date: "30/6",
-        parts: [
-          new AssignementPart({
-            title: "",
-            weight: "100",
-            due_date: "12/09"
-          })
-        ]
-      })
-    ];
-    return a;
-  };
-
-  DemoStundents = function(a) {
-    var s;
-    s = [
-      new Student({
-        id: 12223,
-        name: "Julia",
-        lastname: "Lasarte",
-        comments: "Un comentario"
-      }).initialize_grades(a), new Student({
-        id: 465416,
-        name: "Juan",
-        lastname: "Lasarte",
-        comments: ""
-      }).initialize_grades(a), new Student({
-        id: 45646,
-        name: "Pedro",
-        lastname: "Lasarte",
-        comments: ""
-      }).initialize_grades(a), new Student({
-        id: 13213,
-        name: "Maria",
-        lastname: "Lasarte",
-        comments: ""
-      }).initialize_grades(a), new Student({
-        id: 45646,
-        name: "Elena",
-        lastname: "Lasarte",
-        comments: "Un comentario"
-      }).initialize_grades(a), new Student({
-        id: 79878,
-        name: "Pedro",
-        lastname: "Lasarte",
-        comments: "Un comentario"
-      }).initialize_grades(a)
-    ];
-    return s;
-  };
 
   GradeBookViewModel = (function() {
     function GradeBookViewModel() {
@@ -206,17 +222,19 @@
     };
 
     GradeBookViewModel.prototype.convert_selected_assignments_to_group = function() {
-      var a, assignment, _i, _len, _ref, _results;
-      assignment = new Assignement();
+      var a, ass, _i, _len, _ref;
+      ass = new Assignement();
+      ass.title("Grouped");
       _ref = this.assignements();
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         a = _ref[_i];
-        if (a.is_selected()) {
-          _results.push(console.log(a));
+        if (!(a.is_selected())) {
+          continue;
         }
+        ass.parts.push(a.toAssignmentPart());
+        this.assignements.destroy(a);
       }
-      return _results;
+      return this.assignements.push(ass);
     };
 
     return GradeBookViewModel;
