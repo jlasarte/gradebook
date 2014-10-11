@@ -154,6 +154,9 @@
         return this.parts().length > 1;
       }, this);
       this.is_selected = ko.computed(function() {
+        if (this._destroy) {
+          false;
+        }
         if (this.multiple()) {
           return false;
         } else {
@@ -184,6 +187,10 @@
       return this;
     };
 
+    Assignement.prototype.ungroup = function(parent) {
+      return parent.ungroup(this);
+    };
+
     return Assignement;
 
   })();
@@ -207,6 +214,16 @@
       return this.is_selected(!this.is_selected());
     };
 
+    AssignementPart.prototype.to_assignment = function() {
+      var assignment;
+      assignment = new Assignement();
+      assignment.title(this.title());
+      assignment.due_date(this.due_date());
+      assignment.weight(this.weight());
+      assignment.parts.push(this);
+      return assignment;
+    };
+
     return AssignementPart;
 
   })();
@@ -221,8 +238,19 @@
       return console.log("breaking point");
     };
 
+    GradeBookViewModel.prototype.ungroup = function(assignment) {
+      var a, part, _i, _len, _ref;
+      _ref = assignment.parts();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        part = _ref[_i];
+        a = part.to_assignment();
+        this.assignements.push(a);
+      }
+      return this.assignements.destroy(assignment);
+    };
+
     GradeBookViewModel.prototype.convert_selected_assignments_to_group = function() {
-      var a, ass, _i, _len, _ref;
+      var a, ass, p, _i, _j, _len, _len1, _ref, _ref1;
       ass = new Assignement();
       ass.title("Grouped");
       _ref = this.assignements();
@@ -231,7 +259,12 @@
         if (!(a.is_selected())) {
           continue;
         }
-        ass.parts.push(a.toAssignmentPart());
+        _ref1 = a.parts();
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          p = _ref1[_j];
+          p.title(a.title());
+          ass.parts.push(p);
+        }
         this.assignements.destroy(a);
       }
       return this.assignements.push(ass);

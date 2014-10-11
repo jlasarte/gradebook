@@ -145,6 +145,10 @@ class Assignement
     ,this);
 
     @is_selected = ko.computed(->
+      
+      if @_destroy
+        false
+
       if @multiple()
         false
       else
@@ -153,7 +157,7 @@ class Assignement
         else
           false
     ,this)
-
+  
   toAssignmentPart: ->
     part = new AssignementPart()
     part.title(@title())
@@ -173,6 +177,9 @@ class Assignement
     # return object for chaining etc
     this
 
+  ungroup:(parent)->
+    parent.ungroup this
+
 class AssignementPart
 
   constructor: ->
@@ -191,20 +198,38 @@ class AssignementPart
   toggle_selection: ->
     @is_selected(!@is_selected())
 
+  to_assignment: ->
+    assignment = new Assignement()
+    assignment.title(@title())
+    assignment.due_date(@due_date())
+    assignment.weight(@weight())
+    assignment.parts.push(this)
+    return assignment
+
 class GradeBookViewModel
 
   constructor: ->
     @assignements = ko.observableArray(DemoAssignements())
     @students = ko.observableArray(DemoStundents(@assignements()))
-  
+    
   breakpoint: ->
     console.log "breaking point"
 
+  ungroup:(assignment)->
+    for part in assignment.parts()
+      a = part.to_assignment()
+      @assignements.push(a)
+    @assignements.destroy(assignment)
+
   convert_selected_assignments_to_group: ->
+
     ass = new Assignement()
     ass.title("Grouped")
+    
     for a in @assignements() when a.is_selected()
-      ass.parts.push(a.toAssignmentPart())
+      for p in a.parts()
+        p.title(a.title())
+        ass.parts.push(p)
       @assignements.destroy(a)
     @assignements.push(ass)
 
