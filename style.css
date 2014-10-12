@@ -48,9 +48,10 @@ table {
 }
 
 html {
-	background: #fefce3;
+	background: #fff;
 	text-rendering: optimizeLegibility;
-	color: #333333;
+	color: #555;
+	font-family: "PT Serif", Georgia, "Times New Roman", serif;
 	line-height: 1.15;
 	font-size: 12px;
 }
@@ -109,9 +110,8 @@ html {
 
 .grades-table .grade-table-input {
 	border: none;
-	font-family: serif;
+	font-family: "PT Serif", Georgia, "Times New Roman", serif;
 	text-transform: uppercase;
-	background: #fefce3;
 	font-size: 12px;
 }
 
@@ -121,7 +121,6 @@ html {
 	box-shadow: none;
 	-webkit-box-shadow: none;
 	outline: none;
-	background: #fff;
 }
 
 .grades-table .multiple-assignment-header,
@@ -129,8 +128,14 @@ html {
 	position: relative;
 }
 
+.grades-table .multiple-assignment-header {
+	background: #555;
+	color: #fff;
+}
+
 .grades-table .assignment-part-header.selected {
-	background: red;
+	background: #ac4142;
+	color: #fff;
 }
 
 .grades-table .multiple-button {
@@ -143,12 +148,12 @@ html {
 	color: #868686;
 	text-decoration: none;
 	font-weight: normal;
-	border: 1px solid black;
+	border: 1px solid #531D1E;
 }
 
 .grades-table .multiple-button.active {
-	background: #868686;
-	color: #F7F7F7;
+	background: #ac4142;
+	color: #fff;
 }
 
 .tabs {
@@ -170,6 +175,20 @@ html {
 }
 
 .tabs .tabby-tab.active {
-	background: #fefce3;
+	background: #fff;
 	color: #363636;
+}
+
+.sortable {
+	background: url("images/arrow_up_down_sort.gif");
+	height: 12px;
+	width: 14px;
+	display: inline-block;
+	float: right;
+}
+
+.dragtable-drag-handle {
+	height: 10px;
+	width: 10px;
+	background: red;
 }

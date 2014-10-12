@@ -73,27 +73,27 @@
       }).initialize_grades(a), new Student({
         id: 465416,
         name: "Juan",
-        lastname: "Lasarte",
+        lastname: "Perez",
         comments: ""
       }).initialize_grades(a), new Student({
         id: 45646,
         name: "Pedro",
-        lastname: "Lasarte",
+        lastname: "Alcaucil",
         comments: ""
       }).initialize_grades(a), new Student({
         id: 13213,
         name: "Maria",
-        lastname: "Lasarte",
+        lastname: "Brucelli",
         comments: ""
       }).initialize_grades(a), new Student({
         id: 45646,
         name: "Elena",
-        lastname: "Lasarte",
+        lastname: "Ashifu",
         comments: "Un comentario"
       }).initialize_grades(a), new Student({
         id: 79878,
         name: "Pedro",
-        lastname: "Lasarte",
+        lastname: "Soriano",
         comments: "Un comentario"
       }).initialize_grades(a)
     ];
@@ -125,6 +125,39 @@
       return this;
     };
 
+    Student.prototype.comparte_id_to = function(another) {
+      switch (false) {
+        case this.id() !== another.id():
+          return 0;
+        case !(this.id() > another.id()):
+          return 1;
+        default:
+          return -1;
+      }
+    };
+
+    Student.prototype.comparte_lastname_to = function(another) {
+      switch (false) {
+        case this.lastname() !== another.lastname():
+          return 0;
+        case !(this.lastname() > another.lastname()):
+          return 1;
+        default:
+          return -1;
+      }
+    };
+
+    Student.prototype.comparte_name_to = function(another) {
+      switch (false) {
+        case this.name() !== another.name():
+          return 0;
+        case !(this.name() > another.name()):
+          return 1;
+        default:
+          return -1;
+      }
+    };
+
     return Student;
 
   })();
@@ -150,24 +183,15 @@
       this.weight = ko.observable();
       this.due_date = ko.observable();
       this.parts = ko.observableArray();
+      this.is_selected = ko.observable(false);
       this.multiple = ko.computed(function() {
         return this.parts().length > 1;
       }, this);
-      this.is_selected = ko.computed(function() {
-        if (this._destroy) {
-          false;
-        }
-        if (this.multiple()) {
-          return false;
-        } else {
-          if (this.parts().length > 0) {
-            return this.parts()[0].is_selected();
-          } else {
-            return false;
-          }
-        }
-      }, this);
     }
+
+    Assignement.prototype.toggle_selection = function() {
+      return this.is_selected(!this.is_selected());
+    };
 
     Assignement.prototype.toAssignmentPart = function() {
       var part;
@@ -200,7 +224,6 @@
       this.due_date = ko.observable();
       this.weight = ko.observable();
       this.title = ko.observable();
-      this.is_selected = ko.observable(false);
     }
 
     AssignementPart.prototype.initialize_data = function(data) {
@@ -208,10 +231,6 @@
       this.weight(data.weight);
       this.title(data.title);
       return this;
-    };
-
-    AssignementPart.prototype.toggle_selection = function() {
-      return this.is_selected(!this.is_selected());
     };
 
     AssignementPart.prototype.to_assignment = function() {
@@ -232,7 +251,39 @@
     function GradeBookViewModel() {
       this.assignements = ko.observableArray(DemoAssignements());
       this.students = ko.observableArray(DemoStundents(this.assignements()));
+      this.reverse_id = 1;
+      this.reverse_lastname = 1;
+      this.reverse_name = 1;
     }
+
+    GradeBookViewModel.prototype.sort_students_id = function() {
+      this.students.sort((function(_this) {
+        return function(left, right) {
+          return _this.reverse_id * left.comparte_id_to(right);
+        };
+      })(this));
+      return this.reverse_id = this.reverse_id * -1;
+    };
+
+    GradeBookViewModel.prototype.sort_students_name = function() {
+      this.students.sort((function(_this) {
+        return function(left, right) {
+          return _this.reverse_name * left.comparte_name_to(right);
+        };
+      })(this));
+      return this.reverse_name = this.reverse_name * -1;
+    };
+
+    GradeBookViewModel.prototype.sort_students_lastname = function() {
+      this.students.sort((function(_this) {
+        return function(left, right) {
+          return _this.reverse_lastname * left.comparte_lastname_to(right);
+        };
+      })(this));
+      return this.reverse_lastname = this.reverse_lastname * -1;
+    };
+
+    GradeBookViewModel.prototype.sort_students_final_grade = function() {};
 
     GradeBookViewModel.prototype.breakpoint = function() {
       return console.log("breaking point");

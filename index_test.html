@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Hello World!</title>
-<link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700' rel='stylesheet' type='text/css'>  	<link rel="stylesheet" type="text/css" href="style.css">
+  	<link rel="stylesheet" type="text/css" href="style.css">
   	<link rel="stylesheet" type="text/css" href="vendor/tabby/tabby.min.css">
   </head>
   <body>
@@ -22,8 +22,7 @@
 						<!-- ko foreach: { data: assignements, as: 'assignment'}-->
 							<th data-bind="
 								attr: {colspan: assignment.parts().length}, 
-								css: { 'no-border' : !assignment.multiple(), 'multiple-assignment-header' : assignment.multiple() },
-								click: assignment.multiple() ? assignment.toggle_selection : null
+								css: { 'no-border' : !assignment.multiple(), 'multiple-assignment-header' : assignment.multiple() }
 								">
 								<span data-bind="text: assignment.multiple() ? assignment.title : ''"></span>
 								<!-- ko if: assignment.multiple -->
@@ -36,7 +35,7 @@
 				    	<th class="no-border" colspan="3"></th>
 				    	<!-- ko foreach: {data: assignements, as: 'a'} -->
 				    		<!-- ko foreach: {data: a.parts(), as: 'p'} -->
-				    			<th class="rotate assignment-part-header" data-bind="click: a.multiple()? null : a.toggle_selection.bind(a), css: {'selected': a.is_selected}">
+				    			<th class="rotate assignment-part-header" data-bind="click: p.toggle_selection, css: {'selected': p.is_selected}">
 				    				
 				    				<div><span data-bind="text: a.multiple()? p.title : a.title "></span></div>
 				    			</th>
@@ -77,7 +76,7 @@
 				 			<input type="text"  class="grade-table-input auto-width" data-bind="value: final_grade" />
 				 		</td>
 				 		<td>
-				 			<textarea rows="1" class="grade-table-input" data-bind="value:comments">
+				 			<textarea class="grade-table-input" data-bind="value:comments">
 				 			</textarea>
 				 		</td>
 				 	</tr>

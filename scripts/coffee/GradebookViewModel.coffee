@@ -70,31 +70,31 @@ DemoStundents = (a) ->
     new Student(
       id: 465416
       name: "Juan"
-      lastname: "Lasarte"
+      lastname: "Perez"
       comments: ""
     ).initialize_grades(a)
     new Student(
       id: 45646
       name: "Pedro"
-      lastname: "Lasarte"
+      lastname: "Alcaucil"
       comments: ""
     ).initialize_grades(a)
     new Student(
       id: 13213
       name: "Maria"
-      lastname: "Lasarte"
+      lastname: "Brucelli"
       comments: ""
     ).initialize_grades(a)
     new Student(
       id: 45646
       name: "Elena"
-      lastname: "Lasarte"
+      lastname: "Ashifu"
       comments: "Un comentario"
     ).initialize_grades(a)
     new Student(
       id: 79878
       name: "Pedro"
-      lastname: "Lasarte"
+      lastname: "Soriano"
       comments: "Un comentario"
     ).initialize_grades(a)
   ]
@@ -120,6 +120,24 @@ class Student
     #return object for chaining
     this
 
+  comparte_id_to: (another) ->
+    switch
+      when @id() == another.id() then 0
+      when @id() > another.id() then 1
+      else -1
+
+  comparte_lastname_to: (another) ->
+    switch
+      when @lastname() == another.lastname() then 0
+      when @lastname() > another.lastname() then 1
+      else -1
+
+  comparte_name_to: (another) ->
+    switch
+      when @name() == another.name() then 0
+      when @name() > another.name() then 1
+      else -1
+
 class Grade
   
   constructor: (assignment) ->
@@ -139,24 +157,15 @@ class Assignement
     @weight = ko.observable()
     @due_date = ko.observable()
     @parts = ko.observableArray()
+    
+    @is_selected = ko.observable(false)
 
     @multiple = ko.computed(->
       @parts().length > 1
     ,this);
 
-    @is_selected = ko.computed(->
-      
-      if @_destroy
-        false
-
-      if @multiple()
-        false
-      else
-        if @parts().length > 0
-          @parts()[0].is_selected()
-        else
-          false
-    ,this)
+  toggle_selection: ->
+    @is_selected(!@is_selected())
   
   toAssignmentPart: ->
     part = new AssignementPart()
@@ -186,7 +195,6 @@ class AssignementPart
     @due_date = ko.observable()
     @weight = ko.observable()
     @title = ko.observable()
-    @is_selected = ko.observable(false)
 
   initialize_data: (data) ->
     @due_date(data.due_date)
@@ -194,9 +202,6 @@ class AssignementPart
     @title(data.title)
     #return constructor for chaining
     this
-
-  toggle_selection: ->
-    @is_selected(!@is_selected())
 
   to_assignment: ->
     assignment = new Assignement()
@@ -212,6 +217,31 @@ class GradeBookViewModel
     @assignements = ko.observableArray(DemoAssignements())
     @students = ko.observableArray(DemoStundents(@assignements()))
     
+    @reverse_id = 1;
+    @reverse_lastname = 1;
+    @reverse_name = 1;
+
+  sort_students_id: ->
+    @students.sort((left,right)=>
+        @reverse_id*left.comparte_id_to(right)
+      )
+    @reverse_id = @reverse_id*-1
+
+  sort_students_name: ->
+    @students.sort((left,right)=>
+        @reverse_name*left.comparte_name_to(right)
+      )
+    @reverse_name = @reverse_name*-1
+
+  sort_students_lastname: ->
+    @students.sort((left,right)=>
+        @reverse_lastname*left.comparte_lastname_to(right)
+      )
+    @reverse_lastname = @reverse_lastname*-1
+
+  sort_students_final_grade:->
+    return 
+
   breakpoint: ->
     console.log "breaking point"
 

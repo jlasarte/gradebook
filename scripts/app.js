@@ -3,9 +3,9 @@ function get_input_width() {
 }
 
 $(function(){
-  $(".grade-table-input.auto-width").width(get_input_width);
-  $(".grade-table-input.auto-width").keypress(function(){
-    $(this).width(get_input_width);
-  });
-  tabby.init();
+ 	$(".grade-table-input.auto-width").width(get_input_width);
+	  $(".grade-table-input.auto-width").keypress(function(){
+	    $(this).width(get_input_width);
+	  });
+	  tabby.init();
 })
