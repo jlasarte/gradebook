@@ -49,7 +49,9 @@
 							<span>ID</span>
 							<a href="#" data-bind="click: sort_students_id" class="sortable"></a>
 						</th>
-						<th class="no-rotation">Apellido<a href="#" class="sortable" data-bind="click: sort_students_lastname"></a></th>
+						<th class="no-rotation">Apellido<a href="#" class="sortable" 
+							data-bind="click: sort_students_lastname, css: {'sorted-asc': reverse_lastname() == 1, 'sorted-desc': reverse_lastname() == -1}"></a>
+						</th>
 						<th class="no-rotation">Nombre<a href="#" class="sortable" data-bind="click: sort_students_name"></a></th>
 						<!-- ko foreach: {data: assignements, as: 'a'} -->
 							<!-- ko foreach: {data: a.parts(), as: 'p'} -->
@@ -95,7 +97,7 @@
  	<script type="text/javascript">
 		//window.$ = window.jQuery = require('./libs/jquery.js');
 	</script>
-	<script type="text/javascript" src="./libs/jquery.js"></script>
+  	<script type="text/javascript" src="./libs/jquery.js"></script>
   	<script type="text/javascript" src="./libs/jquery-ui.min.js"></script>
   	<script type="text/javascript" src="./libs/knockout-3.2.0.js"></script>
   	<script type="text/javascript" src="./vendor/jquery.dragtable.js"></script>

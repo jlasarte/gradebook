@@ -8,53 +8,86 @@
       new Assignement().initialize_data({
         title: "TP1",
         type: "Trabajo Practico",
+        weight: "10",
+        due_date: "30/6",
+        parts: [
+          new AssignementPart().initialize_data({
+            title: "",
+            weight: "100",
+            due_date: "12/09"
+          })
+        ]
+      }), new Assignement().initialize_data({
+        title: "TP2",
+        type: "Trabajo Practico",
         weight: "50",
         parts: [
           new AssignementPart().initialize_data({
-            title: "Preguntas",
-            weight: "50",
+            title: "Trabajo de Argumentación",
+            weight: "80",
             due_date: "12/09"
           }), new AssignementPart().initialize_data({
-            title: "Participacion",
-            type: "Part",
-            weight: "50",
+            title: "Debate",
+            weight: "20",
             due_date: "20/09"
+          })
+        ]
+      }), new Assignement().initialize_data({
+        title: "TP3",
+        type: "Trabajo Practico",
+        weight: "50",
+        parts: [
+          new AssignementPart().initialize_data({
+            title: "Resumen",
+            weight: "10",
+            due_date: "12/09"
+          }), new AssignementPart().initialize_data({
+            title: "Analisis Página",
+            weight: "10",
+            due_date: "12/09"
+          }), new AssignementPart().initialize_data({
+            title: "Resumen",
+            weight: "20",
+            due_date: "12/09"
+          }), new AssignementPart().initialize_data({
+            title: "Informe",
+            weight: "60",
+            due_date: "20/09"
+          })
+        ]
+      }), new Assignement().initialize_data({
+        title: "TP4 - Divulgación",
+        type: "Trabajo Practico",
+        weight: "10",
+        due_date: "30/6",
+        parts: [
+          new AssignementPart().initialize_data({
+            title: "",
+            weight: "100",
+            due_date: "12/09"
           })
         ]
       }), new Assignement().initialize_data({
         title: "TP5",
         type: "Trabajo Practico",
-        weight: "10",
-        due_date: "30/6",
+        weight: "50",
         parts: [
           new AssignementPart().initialize_data({
-            title: "",
-            weight: "100",
+            title: "Proyecto",
+            weight: "10",
             due_date: "12/09"
-          })
-        ]
-      }), new Assignement().initialize_data({
-        title: "TP3",
-        type: "Trabajo Practico",
-        weight: "10",
-        due_date: "30/6",
-        parts: [
-          new AssignementPart().initialize_data({
-            title: "",
-            weight: "100",
+          }), new AssignementPart().initialize_data({
+            title: "CV",
+            weight: "10",
             due_date: "12/09"
-          })
-        ]
-      }), new Assignement().initialize_data({
-        title: "TP3",
-        type: "Trabajo Practico",
-        weight: "10",
-        due_date: "30/6",
-        parts: [
-          new AssignementPart().initialize_data({
-            title: "",
-            weight: "100",
+          }), new AssignementPart().initialize_data({
+            title: "Presentaci&oacuten",
+            weight: "20",
             due_date: "12/09"
+          }), new AssignementPart().initialize_data({
+            title: "Afiche y Folleto",
+            weight: "60",
+            due_date: "20/09"
           })
         ]
       })
@@ -247,22 +280,27 @@
 
   })();
 
+
+  /*
+    GradebookViewModel
+   */
+
   GradeBookViewModel = (function() {
     function GradeBookViewModel() {
       this.assignements = ko.observableArray(DemoAssignements());
       this.students = ko.observableArray(DemoStundents(this.assignements()));
-      this.reverse_id = 1;
-      this.reverse_lastname = 1;
-      this.reverse_name = 1;
+      this.reverse_id = ko.observable(0);
+      this.reverse_lastname = ko.observable(0);
+      this.reverse_name = 0;
     }
 
     GradeBookViewModel.prototype.sort_students_id = function() {
-      this.students.sort((function(_this) {
+      this.reverse_id(this.reverse_id() > 0 ? this.reverse_id() * -1 : 1);
+      return this.students.sort((function(_this) {
         return function(left, right) {
-          return _this.reverse_id * left.comparte_id_to(right);
+          return _this.reverse_id() * left.comparte_id_to(right);
         };
       })(this));
-      return this.reverse_id = this.reverse_id * -1;
     };
 
     GradeBookViewModel.prototype.sort_students_name = function() {
@@ -275,18 +313,31 @@
     };
 
     GradeBookViewModel.prototype.sort_students_lastname = function() {
-      this.students.sort((function(_this) {
+      this.reverse_lastname(this.reverse_lastname() > 0 ? this.reverse_lastname() * -1 : 1);
+      return this.students.sort((function(_this) {
         return function(left, right) {
-          return _this.reverse_lastname * left.comparte_lastname_to(right);
+          return _this.reverse_lastname() * left.comparte_lastname_to(right);
         };
       })(this));
-      return this.reverse_lastname = this.reverse_lastname * -1;
     };
 
     GradeBookViewModel.prototype.sort_students_final_grade = function() {};
 
     GradeBookViewModel.prototype.breakpoint = function() {
       return console.log("breaking point");
+    };
+
+    GradeBookViewModel.prototype.selected_asignments = function() {
+      var a, _i, _len, _ref, _results;
+      _ref = this.assignements();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        a = _ref[_i];
+        if (a.is_selected() && !a._destroy) {
+          _results.push(a);
+        }
+      }
+      return _results;
     };
 
     GradeBookViewModel.prototype.ungroup = function(assignment) {
@@ -301,24 +352,24 @@
     };
 
     GradeBookViewModel.prototype.convert_selected_assignments_to_group = function() {
-      var a, ass, p, _i, _j, _len, _len1, _ref, _ref1;
+      var a, ass, first_index, p, selected, _i, _j, _len, _len1, _ref;
       ass = new Assignement();
       ass.title("Grouped");
-      _ref = this.assignements();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        a = _ref[_i];
-        if (!(a.is_selected())) {
-          continue;
-        }
-        _ref1 = a.parts();
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          p = _ref1[_j];
-          p.title(a.title());
+      selected = this.selected_asignments();
+      first_index = this.assignements.indexOf(selected[0]);
+      for (_i = 0, _len = selected.length; _i < _len; _i++) {
+        a = selected[_i];
+        _ref = a.parts();
+        for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+          p = _ref[_j];
+          if (!a.multiple()) {
+            p.title(a.title());
+          }
           ass.parts.push(p);
         }
-        this.assignements.destroy(a);
+        this.assignements.remove(a);
       }
-      return this.assignements.push(ass);
+      return this.assignements.splice(first_index, 0, ass);
     };
 
     return GradeBookViewModel;

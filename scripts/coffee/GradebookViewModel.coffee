@@ -3,57 +3,97 @@ DemoAssignements = ->
     new Assignement().initialize_data(
       title: "TP1"
       type: "Trabajo Practico"
+      weight: "10"
+      due_date: "30/6",
+      parts: [
+        new AssignementPart().initialize_data(
+          title: ""
+          weight: "100"
+          due_date: "12/09"
+        )
+      ]
+    )
+    new Assignement().initialize_data(
+      title: "TP2"
+      type: "Trabajo Practico"
       weight: "50"
       parts: [
         new AssignementPart().initialize_data(
-          title: "Preguntas"
-          weight: "50"
+          title: "Trabajo de Argumentación"
+          weight: "80"
           due_date: "12/09"
         )
         new AssignementPart().initialize_data(
-          title: "Participacion"
-          type: "Part"
-          weight: "50"
+          title: "Debate"
+          weight: "20"
           due_date: "20/09"
+        )
+      ]
+    )
+    new Assignement().initialize_data(
+      title: "TP3"
+      type: "Trabajo Practico"
+      weight: "50"
+      parts: [
+        new AssignementPart().initialize_data(
+          title: "Resumen"
+          weight: "10"
+          due_date: "12/09"
+        )
+        new AssignementPart().initialize_data(
+          title: "Analisis Página"
+          weight: "10"
+          due_date: "12/09"
+        )
+        new AssignementPart().initialize_data(
+          title: "Resumen"
+          weight: "20"
+          due_date: "12/09"
+        )
+        new AssignementPart().initialize_data(
+          title: "Informe"
+          weight: "60"
+          due_date: "20/09"
+        )
+      ]
+    )
+    new Assignement().initialize_data(
+      title: "TP4 - Divulgación"
+      type: "Trabajo Practico"
+      weight: "10"
+      due_date: "30/6",
+      parts: [
+        new AssignementPart().initialize_data(
+          title: ""
+          weight: "100"
+          due_date: "12/09"
         )
       ]
     )
     new Assignement().initialize_data(
       title: "TP5"
       type: "Trabajo Practico"
-      weight: "10"
-      due_date: "30/6",
+      weight: "50"
       parts: [
         new AssignementPart().initialize_data(
-          title: ""
-          weight: "100"
+          title: "Proyecto"
+          weight: "10"
           due_date: "12/09"
         )
-      ]
-    )
-    new Assignement().initialize_data(
-      title: "TP3"
-      type: "Trabajo Practico"
-      weight: "10"
-      due_date: "30/6",
-      parts: [
         new AssignementPart().initialize_data(
-          title: ""
-          weight: "100"
+          title: "CV"
+          weight: "10"
           due_date: "12/09"
         )
-      ]
-    )
-    new Assignement().initialize_data(
-      title: "TP3"
-      type: "Trabajo Practico"
-      weight: "10"
-      due_date: "30/6",
-      parts: [
         new AssignementPart().initialize_data(
-          title: ""
-          weight: "100"
+          title: "Presentaci&oacuten"
+          weight: "20"
           due_date: "12/09"
+        )
+        new AssignementPart().initialize_data(
+          title: "Afiche y Folleto"
+          weight: "60"
+          due_date: "20/09"
         )
       ]
     )
@@ -211,21 +251,24 @@ class AssignementPart
     assignment.parts.push(this)
     return assignment
 
+###
+  GradebookViewModel
+###
 class GradeBookViewModel
 
   constructor: ->
     @assignements = ko.observableArray(DemoAssignements())
     @students = ko.observableArray(DemoStundents(@assignements()))
-    
-    @reverse_id = 1;
-    @reverse_lastname = 1;
-    @reverse_name = 1;
+
+    @reverse_id = ko.observable(0);
+    @reverse_lastname = ko.observable(0);
+    @reverse_name = 0;
 
   sort_students_id: ->
+    @reverse_id( if @reverse_id()>0 then @reverse_id()*-1 else 1)
     @students.sort((left,right)=>
-        @reverse_id*left.comparte_id_to(right)
+        @reverse_id()*left.comparte_id_to(right)
       )
-    @reverse_id = @reverse_id*-1
 
   sort_students_name: ->
     @students.sort((left,right)=>
@@ -234,16 +277,19 @@ class GradeBookViewModel
     @reverse_name = @reverse_name*-1
 
   sort_students_lastname: ->
+    @reverse_lastname( if @reverse_lastname()>0 then @reverse_lastname()*-1 else 1)
     @students.sort((left,right)=>
-        @reverse_lastname*left.comparte_lastname_to(right)
+        @reverse_lastname()*left.comparte_lastname_to(right)
       )
-    @reverse_lastname = @reverse_lastname*-1
 
   sort_students_final_grade:->
     return 
 
   breakpoint: ->
     console.log "breaking point"
+
+  selected_asignments :->
+    a for a in @assignements() when a.is_selected() && ! a._destroy
 
   ungroup:(assignment)->
     for part in assignment.parts()
@@ -255,12 +301,16 @@ class GradeBookViewModel
 
     ass = new Assignement()
     ass.title("Grouped")
-    
-    for a in @assignements() when a.is_selected()
+
+    selected = this.selected_asignments()
+    first_index = @assignements.indexOf(selected[0])
+
+    for a in selected
       for p in a.parts()
-        p.title(a.title())
+        #if a is not multiple, we set the title of the part as the title of the assignement
+        p.title(a.title()) unless a.multiple()
         ass.parts.push(p)
-      @assignements.destroy(a)
-    @assignements.push(ass)
+      @assignements.remove(a)
+    @assignements.splice(first_index,0,ass)
 
 ko.applyBindings new GradeBookViewModel()

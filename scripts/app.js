@@ -1,3 +1,5 @@
+
+
 function get_input_width() {
   return ((this.value.length + 1) * 9) + 'px'
 }
