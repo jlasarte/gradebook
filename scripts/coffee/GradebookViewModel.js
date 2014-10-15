@@ -23,7 +23,7 @@
         weight: "50",
         parts: [
           new AssignementPart().initialize_data({
-            title: "Trabajo de Argumentación",
+            title: "Argumentacion",
             weight: "80",
             due_date: "12/09"
           }), new AssignementPart().initialize_data({
@@ -42,7 +42,7 @@
             weight: "10",
             due_date: "12/09"
           }), new AssignementPart().initialize_data({
-            title: "Analisis Página",
+            title: "Analisis Pagina",
             weight: "10",
             due_date: "12/09"
           }), new AssignementPart().initialize_data({
@@ -56,7 +56,7 @@
           })
         ]
       }), new Assignement().initialize_data({
-        title: "TP4 - Divulgación",
+        title: "TP4 - Divulgacion",
         type: "Trabajo Practico",
         weight: "10",
         due_date: "30/6",
@@ -81,7 +81,7 @@
             weight: "10",
             due_date: "12/09"
           }), new AssignementPart().initialize_data({
-            title: "Presentaci&oacuten",
+            title: "Presentacion",
             weight: "20",
             due_date: "12/09"
           }), new AssignementPart().initialize_data({
@@ -139,6 +139,7 @@
       this.name = ko.observable(data.name);
       this.lastname = ko.observable(data.lastname);
       this.comments = ko.observable(data.comments);
+      this.dropedout = ko.observable(false);
       this.grades = ko.observableArray([]);
       this.final_grade = ko.computed(function() {
         return 10;

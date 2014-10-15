@@ -25,7 +25,7 @@
 								css: { 'no-border' : !assignment.multiple(), 'multiple-assignment-header' : assignment.multiple() },
 								click: assignment.multiple() ? assignment.toggle_selection : null
 								">
-								<span data-bind="text: assignment.multiple() ? assignment.title : ''"></span>
+								<span class="title" data-bind="text: assignment.multiple() ? assignment.title : ''"></span>
 								<!-- ko if: assignment.multiple -->
 									<a href="#" data-bind="click: $parent.ungroup.bind($parent)" class="multiple-button active">M</a>
 								<!-- /ko -->
@@ -38,7 +38,7 @@
 				    		<!-- ko foreach: {data: a.parts(), as: 'p'} -->
 				    			<th class="rotate assignment-part-header" data-bind="click: a.multiple()? null : a.toggle_selection.bind(a), css: {'selected': a.is_selected}">
 				    				
-				    				<div><span data-bind="text: a.multiple()? p.title : a.title "></span></div>
+				    				<div><span class="title" data-bind="text: a.multiple()? p.title : a.title "></span></div>
 				    			</th>
 				    		<!-- /ko -->
 				        <!-- /ko -->

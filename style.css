@@ -179,6 +179,11 @@ html {
 	color: #363636;
 }
 
+.tabs .tabby-tab:focus {
+	border: none;
+	outline: none;
+}
+
 .sortable {
 	background: url("images/arrow_up_down_sort.gif");
 	height: 12px;

@@ -10,4 +10,10 @@ $(function(){
 	    $(this).width(get_input_width);
 	  });
 	  tabby.init();
+
+	$(".rotate").each(function(index, value) {
+		var anchor = $(this);
+		var title = $(anchor.find("span.title")[0])
+		$(anchor).height(title.width());
+	});
 })

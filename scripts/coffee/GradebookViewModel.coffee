@@ -19,7 +19,7 @@ DemoAssignements = ->
       weight: "50"
       parts: [
         new AssignementPart().initialize_data(
-          title: "Trabajo de Argumentación"
+          title: "Argumentacion"
           weight: "80"
           due_date: "12/09"
         )
@@ -41,7 +41,7 @@ DemoAssignements = ->
           due_date: "12/09"
         )
         new AssignementPart().initialize_data(
-          title: "Analisis Página"
+          title: "Analisis Pagina"
           weight: "10"
           due_date: "12/09"
         )
@@ -58,7 +58,7 @@ DemoAssignements = ->
       ]
     )
     new Assignement().initialize_data(
-      title: "TP4 - Divulgación"
+      title: "TP4 - Divulgacion"
       type: "Trabajo Practico"
       weight: "10"
       due_date: "30/6",
@@ -86,7 +86,7 @@ DemoAssignements = ->
           due_date: "12/09"
         )
         new AssignementPart().initialize_data(
-          title: "Presentaci&oacuten"
+          title: "Presentacion"
           weight: "20"
           due_date: "12/09"
         )
@@ -147,6 +147,7 @@ class Student
     @name = ko.observable(data.name)
     @lastname = ko.observable(data.lastname)
     @comments = ko.observable(data.comments)
+    @dropedout = ko.observable(false)
     @grades = ko.observableArray([])
 
     @final_grade = ko.computed(->
